@@ -39,7 +39,7 @@ const App = (() => {
   });
 }
 
-async function loadFromGitHub() {
+const loadFromGitHub = async () => {
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
   const res = await fetch(url, {
@@ -48,12 +48,13 @@ async function loadFromGitHub() {
 
   const data = await res.json();
   const decoded = JSON.parse(atob(data.content));
+
   state = decoded;
 
   renderAll();
-}
+};
 
-async function saveToGitHub() {
+const saveToGitHub = async () => {
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
   const fileRes = await fetch(url, {
@@ -71,11 +72,15 @@ async function saveToGitHub() {
       "Authorization": `token ${TOKEN}`,
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      message: "Update planner data",
-      content,
-      sha
-    })
+    body: JSON.stringify({ message: "Update planner data", content, sha })
+  });
+
+  if(response.ok){
+    alert("Saved to GitHub!");
+  } else {
+    alert("Save failed.");
+  }
+};
   });
 
   if(response.ok){
@@ -732,6 +737,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
