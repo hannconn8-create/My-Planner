@@ -39,34 +39,33 @@ const App = (() => {
   });
 }
 
-function loadFromGitHub() {
-
+async function loadFromGitHub() {
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
-  const res = fetch(url);
+  const res = await fetch(url, {
+    headers: { "Authorization": `token ${TOKEN}` }
+  });
 
-  const data = res.json();
-
+  const data = await res.json();
   const decoded = JSON.parse(atob(data.content));
-
   state = decoded;
 
   renderAll();
-
 }
 
-function saveToGitHub() {
-
+async function saveToGitHub() {
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
-  const file = fetch(url);
-  const fileData = file.json();
+  const fileRes = await fetch(url, {
+    headers: { "Authorization": `token ${TOKEN}` }
+  });
 
+  const fileData = await fileRes.json();
   const sha = fileData.sha;
 
   const content = btoa(JSON.stringify(state, null, 2));
 
-  const response = fetch(url, {
+  const response = await fetch(url, {
     method: "PUT",
     headers: {
       "Authorization": `token ${TOKEN}`,
@@ -74,11 +73,17 @@ function saveToGitHub() {
     },
     body: JSON.stringify({
       message: "Update planner data",
-      content: content,
-      sha: sha
+      content,
+      sha
     })
   });
 
+  if(response.ok){
+    alert("Saved to GitHub!");
+  } else {
+    alert("Save failed.");
+  }
+}
   if(response.ok){
     alert("Saved to GitHub!");
   } else {
@@ -726,7 +731,8 @@ div.appendChild(deleteBtn);
 
 })();
 
-window.onload = App.init;
+window.onload = () => App.init();
+
 
 
 
