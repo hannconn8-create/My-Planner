@@ -18,53 +18,80 @@ let draggedTaskId = null;
 window.init = init;
 window.onload = () => init();
   
-// ---------- FILE CONFIG ----------
+// ---------- GITHUB CONFIG ----------
 const FILE_PATH = "planner-data.json"; // initial JSON in root
 const GITHUB_RAW_URL = `https://raw.githubusercontent.com/hannconn8-create/My-Planner/main/${FILE_PATH}`;
 
-// ---------- LOAD FUNCTION ----------
+// ---------- INDEXEDDB SETUP ----------
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("PlannerDB", 1);
+    request.onupgradeneeded = e => {
+      const db = e.target.result;
+      // object store to hold the single planner state
+      db.createObjectStore("planner", { keyPath: "id" });
+    };
+    request.onsuccess = e => resolve(e.target.result);
+    request.onerror = e => reject(e.target.error);
+  });
+}
+
+// ---------- SAVE STATE ----------
+async function savePlanner() {
+  try {
+    const db = await openDB();
+    const tx = db.transaction("planner", "readwrite");
+    const store = tx.objectStore("planner");
+    store.put({ id: 1, data: state });
+    await tx.complete; // ensures transaction finishes
+  } catch (err) {
+    console.error("Failed to save planner to IndexedDB:", err);
+  }
+}
+
+// ---------- LOAD STATE ----------
 async function loadPlanner() {
   try {
-    // 1️⃣ Try to load from localStorage first
-    const localData = localStorage.getItem("plannerData");
-    if (localData) {
-      state = JSON.parse(localData);
-      renderAll();
-      return;
-    }
+    const db = await openDB();
+    const tx = db.transaction("planner", "readonly");
+    const store = tx.objectStore("planner");
+    const req = store.get(1);
 
-    // 2️⃣ If nothing in localStorage, fetch from GitHub (initial data)
-    const res = await fetch(GITHUB_RAW_URL);
-    if (!res.ok) {
-      console.warn("Failed to load initial planner JSON:", res.status);
-      return;
-    }
+    req.onsuccess = async () => {
+      if (req.result) {
+        // Data exists in IndexedDB
+        state = req.result.data;
+        renderAll();
+      } else {
+        // First time use, fetch from GitHub
+        const res = await fetch(GITHUB_RAW_URL);
+        if (!res.ok) {
+          console.warn("Failed to load initial planner JSON:", res.status);
+          return;
+        }
+        const data = await res.json();
+        state = data;
+        await savePlanner(); // save initial state to IndexedDB
+        renderAll();
+      }
+    };
 
-    const data = await res.json();
-    state = data;
-
-    // 3️⃣ Save initial state to localStorage so user edits persist
-    localStorage.setItem("plannerData", JSON.stringify(state));
-
-    renderAll();
+    req.onerror = () => {
+      console.error("Error reading from IndexedDB");
+    };
   } catch (err) {
     console.error("Error loading planner:", err);
   }
 }
 
-// ---------- SAVE FUNCTION ----------
-function savePlanner() {
-  localStorage.setItem("plannerData", JSON.stringify(state));
-  alert("Planner saved locally!");
-}
-
-// ---------- AUTO SAVE (optional) ----------
+// ---------- AUTO SAVE ON CHANGES ----------
 function autoSavePlanner() {
-  localStorage.setItem("plannerData", JSON.stringify(state));
+  savePlanner();
+  // optionally alert or update UI if you want
 }
 
 function init() {
-  loadPlanner(); // load data from localStorage or GitHub
+  loadPlanner();       // load data from IndexedDB (or GitHub if first run)
   renderAll();
 
   document.getElementById("saveBtn").onclick = savePlanner;
@@ -695,6 +722,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
