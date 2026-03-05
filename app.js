@@ -39,13 +39,13 @@ const App = (() => {
   });
 }
 
-async function loadFromGitHub() {
+function loadFromGitHub() {
 
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
-  const res = await fetch(url);
+  const res = fetch(url);
 
-  const data = await res.json();
+  const data = res.json();
 
   const decoded = JSON.parse(atob(data.content));
 
@@ -55,18 +55,18 @@ async function loadFromGitHub() {
 
 }
 
-async function saveToGitHub() {
+function saveToGitHub() {
 
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
-  const file = await fetch(url);
-  const fileData = await file.json();
+  const file = fetch(url);
+  const fileData = file.json();
 
   const sha = fileData.sha;
 
   const content = btoa(JSON.stringify(state, null, 2));
 
-  const response = await fetch(url, {
+  const response = fetch(url, {
     method: "PUT",
     headers: {
       "Authorization": `token ${TOKEN}`,
@@ -727,6 +727,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = App.init;
+
 
 
 
