@@ -1,71 +1,38 @@
 const App = (() => {
-  const GITHUB_USER = "hannconn8";
-  const GITHUB_REPO = "My-Planner";
-  const FILE_PATH = "planner-data.json";
-  const TOKEN = "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";
+  // ---------- GLOBAL VARIABLES ----------
+const GITHUB_USER = "hannconn8";
+const GITHUB_REPO = "My-Planner";
+const FILE_PATH = "planner-data.json";
+const TOKEN = "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";
 
-  const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-  const sections = ["Morning","Afternoon","Evening"];
+const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const sections = ["Morning","Afternoon","Evening"];
 
-  let state = {
-    tasks: [],
-    tags: [],
-    tagPanelOpen: true,
-    focusDay: null
-  };
+let state = {
+  tasks: [],
+  tags: [],
+  tagPanelOpen: true,
+  focusDay: null
+};
 
-  let draggedTaskId = null;
+let draggedTaskId = null;
 
-  // ---------- INIT ----------
-  function init() {
-
-  loadFromGitHub();
-
-  renderAll();
-
-  setInterval(renderAll, 60000);
-
-  document.getElementById("saveBtn").onclick = saveToGitHub;
-  document.getElementById("resetWeekBtn").onclick = resetWeek;
-
-}
-
-  // Sync planner across tabs
-  window.addEventListener("storage", (e) => {
-    if (e.key === "plannerData") {
-      loadFromGitHub();
-      renderAll();
-    }
-  });
-}
-
+// ---------- ASYNC FUNCTIONS ----------
 const loadFromGitHub = async () => {
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
-
-  const res = await fetch(url, {
-    headers: { "Authorization": `token ${TOKEN}` }
-  });
-
+  const res = await fetch(url, { headers: { "Authorization": `token ${TOKEN}` }});
   const data = await res.json();
   const decoded = JSON.parse(atob(data.content));
-
   state = decoded;
-
   renderAll();
 };
 
 const saveToGitHub = async () => {
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
-
-  const fileRes = await fetch(url, {
-    headers: { "Authorization": `token ${TOKEN}` }
-  });
-
+  const fileRes = await fetch(url, { headers: { "Authorization": `token ${TOKEN}` }});
   const fileData = await fileRes.json();
   const sha = fileData.sha;
-
   const content = btoa(JSON.stringify(state, null, 2));
-
   const response = await fetch(url, {
     method: "PUT",
     headers: {
@@ -74,28 +41,22 @@ const saveToGitHub = async () => {
     },
     body: JSON.stringify({ message: "Update planner data", content, sha })
   });
-
-  if(response.ok){
-    alert("Saved to GitHub!");
-  } else {
-    alert("Save failed.");
-  }
+  if(response.ok){ alert("Saved to GitHub!"); } else { alert("Save failed."); }
 };
-  });
 
-  if(response.ok){
-    alert("Saved to GitHub!");
-  } else {
-    alert("Save failed.");
-  }
-}
-  if(response.ok){
-    alert("Saved to GitHub!");
-  } else {
-    alert("Save failed.");
-  }
+// ---------- INIT FUNCTION ----------
+function init() {
+  loadFromGitHub();
+  renderAll();
+  setInterval(renderAll, 60000);
 
+  document.getElementById("saveBtn").onclick = saveToGitHub;
+  document.getElementById("resetWeekBtn").onclick = resetWeek;
 }
+
+// ---------- Expose init globally ----------
+window.init = init;
+window.onload = () => init();
   
   // ---------- STORAGE ----------
   function save() {
@@ -737,6 +698,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
