@@ -5,6 +5,7 @@ const GITHUB_REPO = "My-Planner";
 const FILE_PATH = "data/planner-data.json";
 const TOKEN = "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";
 
+  
 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const sections = ["Morning","Afternoon","Evening"];
 
@@ -705,6 +706,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
