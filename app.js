@@ -39,7 +39,7 @@ const App = (() => {
   });
 }
 
-function loadFromGitHub() {
+async function loadFromGitHub() {
 
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
@@ -55,7 +55,7 @@ function loadFromGitHub() {
 
 }
 
-function saveToGitHub() {
+async function saveToGitHub() {
 
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
@@ -727,6 +727,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = App.init;
+
 
 
 
