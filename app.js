@@ -20,7 +20,14 @@ let draggedTaskId = null;
 // ---------- ASYNC FUNCTIONS ----------
 const loadFromGitHub = async () => {
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
+
   const res = await fetch(url, { headers: { "Authorization": `token ${TOKEN}` }});
+
+  if (!res.ok) {
+    console.error("GitHub file not found or fetch failed:", res.status);
+    return;
+  }
+
   const data = await res.json();
   const decoded = JSON.parse(atob(data.content));
   state = decoded;
@@ -698,6 +705,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
