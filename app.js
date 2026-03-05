@@ -19,7 +19,7 @@ const App = (() => {
   // ---------- INIT ----------
   function init() {
 
-  await loadFromGitHub();
+  loadFromGitHub();
 
   renderAll();
 
@@ -727,6 +727,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = App.init;
+
 
 
 
