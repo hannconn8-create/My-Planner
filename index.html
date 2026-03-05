@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Planner</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+
+  <!-- Your CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1> Planner</h1>
+    <div class="header-buttons">
+      <button id="saveBtn">Save</button>
+      <button id="resetWeekBtn">Weekly Reset</button>
+    </div>
+  </header>
+
+  <!-- TAG PANEL -->
+  <section id="tagPanel">
+    <div class="tag-header" onclick="App.toggleTagPanel()">
+      <h2>Tags</h2>
+      <span id="tagToggle">▼</span>
+    </div>
+    <div id="tagContent"></div>
+    <div class="tag-controls">
+      <input type="text" id="newTagName" placeholder="New parent tag">
+      <input type="color" id="newTagColor" value="#7e57c2">
+      <button onclick="App.addParentTag()">Add Tag</button>
+    </div>
+  </section>
+
+  <!-- QUICK TASKS -->
+  <section id="quickSection">
+    <h2>Quick To-Do</h2>
+    <div id="quickTasks" class="task-container"></div>
+
+    <div class="task-form">
+      <input type="text" id="quickTitle" placeholder="Task title">
+      <select id="quickTagSelect"></select>
+      <button onclick="App.addQuickTask()">Add</button>
+    </div>
+  </section>
+
+  <!-- WEEKLY PLANNER -->
+  <section id="weekContainer"></section>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+body {
+ font-family: "Poppins", "Futura", "Avenir", sans-serif;
+  margin: 0;
+  background: #f6f2ff;
+  color: #333;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: linear-gradient(90deg, #a885dc, #9575cd);
+  color: rgb(239, 221, 249);
+}
+
+button {
+  background: #7e57c2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+section {
+  margin: 20px;
+  padding: 18px;
+  background: rgb(238, 174, 248);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.day {
+  margin-bottom: 24px;
+  padding: 18px;
+  border-radius: 12px;
+  background: rgb(240, 210, 245);
+  border: 1px solid #e5dfff;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.time-section {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #faf8ff;
+}
+
+.task {
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: #f1ecff;
+  border-radius: 10px;
+  cursor: grab;
+  transition: 0.15s ease;
+}
+
+.task:hover {
+  transform: scale(1.01);
+}
+
+.task.dragging {
+  opacity: 0.5;
+}
+
+.task.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.badge {
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: white;
+  margin-left: 8px;
+}
+
+.task-container {
+  min-height: 30px;
+}
+
+.task-form input,
+.task-form select {
+  margin-right: 6px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+textarea {
+  width: 100%;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #cf63e4;
+  padding: 6px;
+  font-size: 13px;
+}
+
+#tagPanel {
+  background: #e0abf4;
+}
+
+.tag-header {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.tag-item {
+  margin-bottom: 6px;
+}
+
+.subtag {
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+#trash {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(90deg, #c62828, #e53935);
+  color: white;
+  text-align: center;
+  padding: 14px;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+#trash.drag-over {
+  background: #e13f3f;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* pushes Notes button to the right */
+}
+
+.badge {
+  cursor: pointer;
+  user-select: none; /* prevents accidental text selection */
+}
+
+.subtag-wrapper {
+  margin-left: 16px;
+  margin-top: 6px;
+  border-left: 2px dashed #ccc;
+  padding-left: 8px;
+}
+
+.subtag-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.current-day {
+  border: 2px solid #a080d7;
+  box-shadow: 0 0 20px rgba(126,87,194,0.3);
+}
+
+.current-section {
+  background: #ede7f6;
+  border-left: 4px solid #7e57c2;
+}
+
+/* ---------- Background ---------- */
+body {
+  background: linear-gradient(to bottom right, #3b0a45, #5e2ca5); /* dark purple gradient */
+  color: #eaddfe; /* light purple text */
+}
+
+/* ---------- Day & Task Boxes ---------- */
+.day, .time-section, .task, .tag-item {
+  background: rgba(128, 0, 128, 0.2); /* light purple transparent */
+  border: 2px solid #a55eea; /* darker purple border */
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 0 10px rgba(94, 44, 165, 0.3);
+}
+
+/* ---------- Task Checkbox ---------- */
+.task input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #9fffb0; /* subtle green accent */
+  border-radius: 50%; /* circular */
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+/* ---------- Notes Button ---------- */
+.task button {
+  margin-left: 10px;
+  background: #7e57c2; /* purple */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.task button:hover {
+  box-shadow: 0 0 5px #9e7ffb;
+}
+
+
+/* ---------- Hover effects ---------- */
+.task:hover {
+  box-shadow: 0 0 15px rgba(158, 127, 251, 0.5);
+}
+
+/* Highlight current time section */
+.current-section {
+    background-color: #9b59b6; /* lighter purple */
+    color: #fff;
+    border-radius: 5px;
+    padding: 2px 5px;
+    transition: background 0.3s;
+}
+
+.task button.delete-btn {
+  background: #c62828; /* red */
+  color: #fff;
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+.task button.delete-btn:hover {
+  box-shadow: 0 0 5px #ff4d4d;
+}
+
+body {
+  font-family: 'Satisfy', cursive;
+}
