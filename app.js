@@ -17,7 +17,7 @@ const App = (() => {
   let draggedTaskId = null;
 
   // ---------- INIT ----------
-  async function init() {
+  function init() {
 
   await loadFromGitHub();
 
@@ -39,7 +39,7 @@ const App = (() => {
   });
 }
 
-async function loadFromGitHub() {
+function loadFromGitHub() {
 
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
@@ -55,7 +55,7 @@ async function loadFromGitHub() {
 
 }
 
-async function saveToGitHub() {
+function saveToGitHub() {
 
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
@@ -727,5 +727,6 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = App.init;
+
 
 
