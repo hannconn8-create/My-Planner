@@ -447,33 +447,10 @@ sec.appendChild(form);
   }
 
   // ---------- QUICK ----------
-  function addQuickTask() {
-    const title = document.getElementById("quickTitle").value;
-    const tagId = document.getElementById("quickTagSelect").value;
-    if (!title) return;
-
-    state.tasks.push({
-      id: Date.now(),
-      title,
-      type: "quick",
-      tagId: tagId || null,
-      description: "",
-      completed: false,
-      notes: ""
-    });
-    autoSave();
-    document.getElementById("quickTitle").value = "";
-    renderAll();
-  }
-
-  function renderQuickTasks() {
-    const container = document.getElementById("quickTasks");
-    container.innerHTML = "";
-
-    state.tasks
-      .filter(t => t.type === "quick")
-      .forEach(t => container.appendChild(createTaskElement(t)));
-  }
+  document.getElementById("saveBtn").onclick = async () => {
+  await savePlanner(); // wait for IndexedDB to finish saving
+  alert("Planner saved!");
+};
 
   // ---------- TASK ----------
   function createTaskElement(task) {
@@ -709,6 +686,8 @@ div.appendChild(deleteBtn);
     renderAll();
   }
 
+  document.getElementById("addQuickBtn").onclick = addQuickTask;
+
   function renderAll() {
     renderTags();
     renderWeek();
@@ -725,6 +704,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
