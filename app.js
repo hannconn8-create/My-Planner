@@ -1,4 +1,8 @@
 const App = (() => {
+  const GITHUB_USER = "hannconn8";
+  const GITHUB_REPO = "token_for_planner";
+  const FILE_PATH = "planner-data.json";
+  const TOKEN = "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";
 
   const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
   const sections = ["Morning","Afternoon","Evening"];
@@ -14,23 +18,64 @@ const App = (() => {
 
   // ---------- INIT ----------
   function init() {
-  load();
+  loadFromGitHub();
   renderAll();
 
   setInterval(renderAll, 60000);
 
-  document.getElementById("saveBtn").onclick = save;
+  document.getElementById("saveBtn").onclick = saveToGitHub;
   document.getElementById("resetWeekBtn").onclick = resetWeek;
 
   // Sync planner across tabs
   window.addEventListener("storage", (e) => {
     if (e.key === "plannerData") {
-      load();
+      loadFromGitHub();
       renderAll();
     }
   });
 }
 
+async function loadFromGitHub() {
+
+  const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
+
+  const res = await fetch(url);
+
+  const data = await res.json();
+
+  const decoded = JSON.parse(atob(data.content));
+
+  state = decoded;
+
+  renderAll();
+
+}
+
+async function saveToGitHub() {
+
+  const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
+
+  const getFile = await fetch(url);
+  const fileData = await getFile.json();
+
+  const sha = fileData.sha;
+
+  const content = btoa(JSON.stringify(state, null, 2));
+
+  await fetch(url, {
+    method: "PUT",
+    headers: {
+      "Authorization": `token ${TOKEN}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: "Update planner data",
+      content: content,
+      sha: sha
+    })
+  });
+
+}
   // ---------- STORAGE ----------
   function save() {
     localStorage.setItem("plannerData", JSON.stringify(state));
