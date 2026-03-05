@@ -2,7 +2,7 @@ const App = (() => {
   // ---------- GLOBAL VARIABLES ----------
 const GITHUB_USER = "hannconn8";
 const GITHUB_REPO = "My-Planner";
-const FILE_PATH = "planner-data.json";
+const FILE_PATH = "data/planner-data.json";
 const TOKEN = "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";
 
 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
@@ -705,6 +705,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
