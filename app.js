@@ -55,14 +55,14 @@ async function saveToGitHub() {
 
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
 
-  const getFile = await fetch(url);
-  const fileData = await getFile.json();
+  const file = await fetch(url);
+  const fileData = await file.json();
 
   const sha = fileData.sha;
 
   const content = btoa(JSON.stringify(state, null, 2));
 
-  await fetch(url, {
+  const response = await fetch(url, {
     method: "PUT",
     headers: {
       "Authorization": `token ${TOKEN}`,
@@ -75,7 +75,14 @@ async function saveToGitHub() {
     })
   });
 
+  if(response.ok){
+    alert("Saved to GitHub!");
+  } else {
+    alert("Save failed.");
+  }
+
 }
+  
   // ---------- STORAGE ----------
   function save() {
     localStorage.setItem("plannerData", JSON.stringify(state));
@@ -716,3 +723,4 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = App.init;
+
