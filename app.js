@@ -1,9 +1,5 @@
 const App = (() => {
   // ---------- GLOBAL VARIABLES ----------
-const GITHUB_USER = "hannconn8";
-const GITHUB_REPO = "My-Planner";
-const FILE_PATH = "planner-data.json"; // file in root
-const url = `https://raw.githubusercontent.com/hannconn8/My-Planner/main/${FILE_PATH}`;
 
   
 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
@@ -18,50 +14,62 @@ let state = {
 
 let draggedTaskId = null;
 
-// ---------- ASYNC FUNCTIONS ----------
-async function loadFromGitHub() {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      console.warn("GitHub file not found or fetch failed:", res.status);
-      return;
-    }
-    const data = await res.json();
-    state = data;
-    renderAll();
-  } catch (err) {
-    console.error("Error loading from GitHub:", err);
-  }
-}
-
-function saveToLocal() {
-  localStorage.setItem("plannerData", JSON.stringify(state));
-  alert("Planner saved locally!");
-}
-
-// ---------- INIT FUNCTION ----------
-function init() {
-  loadFromGitHub();
-  renderAll();
-  document.getElementById("saveBtn").onclick = saveToLocal;
-  document.getElementById("resetWeekBtn").onclick = resetWeek;
-}
-
 // ---------- Expose init globally ----------
 window.init = init;
 window.onload = () => init();
   
-  // ---------- STORAGE ----------
+// ---------- FILE CONFIG ----------
+const FILE_PATH = "planner-data.json"; // initial JSON in root
+const GITHUB_RAW_URL = `https://raw.githubusercontent.com/hannconn8-create/My-Planner/main/${FILE_PATH}`;
 
-  function autoSave() {
+// ---------- LOAD FUNCTION ----------
+async function loadPlanner() {
+  try {
+    // 1️⃣ Try to load from localStorage first
+    const localData = localStorage.getItem("plannerData");
+    if (localData) {
+      state = JSON.parse(localData);
+      renderAll();
+      return;
+    }
+
+    // 2️⃣ If nothing in localStorage, fetch from GitHub (initial data)
+    const res = await fetch(GITHUB_RAW_URL);
+    if (!res.ok) {
+      console.warn("Failed to load initial planner JSON:", res.status);
+      return;
+    }
+
+    const data = await res.json();
+    state = data;
+
+    // 3️⃣ Save initial state to localStorage so user edits persist
+    localStorage.setItem("plannerData", JSON.stringify(state));
+
+    renderAll();
+  } catch (err) {
+    console.error("Error loading planner:", err);
+  }
+}
+
+// ---------- SAVE FUNCTION ----------
+function savePlanner() {
+  localStorage.setItem("plannerData", JSON.stringify(state));
+  alert("Planner saved locally!");
+}
+
+// ---------- AUTO SAVE (optional) ----------
+function autoSavePlanner() {
   localStorage.setItem("plannerData", JSON.stringify(state));
 }
 
-  function load() {
-    const data = localStorage.getItem("plannerData");
-    if (data) state = JSON.parse(data);
-  }
-  
+function init() {
+  loadPlanner(); // load data from localStorage or GitHub
+  renderAll();
+
+  document.getElementById("saveBtn").onclick = savePlanner;
+  document.getElementById("resetWeekBtn").onclick = resetWeek;
+}
 
   // ---------- TAG SYSTEM ----------
 
@@ -687,6 +695,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
