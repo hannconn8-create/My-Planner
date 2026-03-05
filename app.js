@@ -2,7 +2,8 @@ const App = (() => {
   // ---------- GLOBAL VARIABLES ----------
 const GITHUB_USER = "hannconn8";
 const GITHUB_REPO = "My-Planner";
-const FILE_PATH = "data/planner-data.json";
+const FILE_PATH = "planner-data.json"; // file in root
+const url = `https://raw.githubusercontent.com/hannconn8/My-Planner/main/${FILE_PATH}`;
 const TOKEN = "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";
 
   
@@ -19,21 +20,20 @@ let state = {
 let draggedTaskId = null;
 
 // ---------- ASYNC FUNCTIONS ----------
-const loadFromGitHub = async () => {
-  const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
-
-  const res = await fetch(url, { headers: { "Authorization": `token ${TOKEN}` }});
-
-  if (!res.ok) {
-    console.error("GitHub file not found or fetch failed:", res.status);
-    return;
+async function loadFromGitHub() {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.warn("GitHub file not found or fetch failed:", res.status);
+      return;
+    }
+    const data = await res.json();
+    state = data;
+    renderAll();
+  } catch (err) {
+    console.error("Error loading from GitHub:", err);
   }
-
-  const data = await res.json();
-  const decoded = JSON.parse(atob(data.content));
-  state = decoded;
-  renderAll();
-};
+}
 
 const saveToGitHub = async () => {
   const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
@@ -706,6 +706,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
