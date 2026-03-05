@@ -34,22 +34,10 @@ async function loadFromGitHub() {
   }
 }
 
-const saveToGitHub = async () => {
-  const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
-  const fileRes = await fetch(url, { headers: { "Authorization": `token ${TOKEN}` }});
-  const fileData = await fileRes.json();
-  const sha = fileData.sha;
-  const content = btoa(JSON.stringify(state, null, 2));
-  const response = await fetch(url, {
-    method: "PUT",
-    headers: {
-      "Authorization": `token ${TOKEN}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ message: "Update planner data", content, sha })
-  });
-  if(response.ok){ alert("Saved to GitHub!"); } else { alert("Save failed."); }
-};
+function saveToLocal() {
+  localStorage.setItem("plannerData", JSON.stringify(state));
+  alert("Planner saved locally!");
+}
 
 // ---------- INIT FUNCTION ----------
 function init() {
@@ -64,10 +52,6 @@ window.init = init;
 window.onload = () => init();
   
   // ---------- STORAGE ----------
-  function save() {
-    localStorage.setItem("plannerData", JSON.stringify(state));
-    alert("Saved!");
-  }
 
   function autoSave() {
   localStorage.setItem("plannerData", JSON.stringify(state));
@@ -703,6 +687,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
