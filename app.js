@@ -94,7 +94,10 @@ function init() {
   loadPlanner();       // load data from IndexedDB (or GitHub if first run)
   renderAll();
 
-  document.getElementById("saveBtn").onclick = savePlanner;
+  document.getElementById("saveBtn").onclick = async () => {
+  await savePlanner(); // wait for IndexedDB to finish saving
+  alert("Planner saved!");
+};
   document.getElementById("resetWeekBtn").onclick = resetWeek;
 }
 
@@ -722,6 +725,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
