@@ -4,7 +4,6 @@ const GITHUB_USER = "hannconn8";
 const GITHUB_REPO = "My-Planner";
 const FILE_PATH = "planner-data.json"; // file in root
 const url = `https://raw.githubusercontent.com/hannconn8/My-Planner/main/${FILE_PATH}`;
-const TOKEN = "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";
 
   
 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
@@ -56,9 +55,7 @@ const saveToGitHub = async () => {
 function init() {
   loadFromGitHub();
   renderAll();
-  setInterval(renderAll, 60000);
-
-  document.getElementById("saveBtn").onclick = saveToGitHub;
+  document.getElementById("saveBtn").onclick = saveToLocal;
   document.getElementById("resetWeekBtn").onclick = resetWeek;
 }
 
@@ -706,6 +703,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
