@@ -1,6 +1,6 @@
 const App = (() => {
   const GITHUB_USER = "hannconn8";
-  const GITHUB_REPO = "token_for_planner";
+  const GITHUB_REPO = "My-Planner";
   const FILE_PATH = "planner-data.json";
   const TOKEN = "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";
 
@@ -17,14 +17,18 @@ const App = (() => {
   let draggedTaskId = null;
 
   // ---------- INIT ----------
-  function init() {
-  loadFromGitHub();
+  async function init() {
+
+  await loadFromGitHub();
+
   renderAll();
 
   setInterval(renderAll, 60000);
 
   document.getElementById("saveBtn").onclick = saveToGitHub;
   document.getElementById("resetWeekBtn").onclick = resetWeek;
+
+}
 
   // Sync planner across tabs
   window.addEventListener("storage", (e) => {
@@ -723,4 +727,5 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = App.init;
+
 
