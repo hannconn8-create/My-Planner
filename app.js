@@ -622,6 +622,40 @@ div.appendChild(deleteBtn);
     renderAll();
   }
 
+function addQuickTask() {
+  const titleInput = document.getElementById("quickTitle");
+  const tagSelect = document.getElementById("quickTagSelect");
+  const title = titleInput.value.trim();
+  if (!title) return;
+
+  const tagId = tagSelect.value || null;
+
+  state.tasks.push({
+    id: Date.now(),
+    title,
+    type: "quick",
+    tagId,
+    description: "",
+    completed: false
+  });
+
+  titleInput.value = "";
+  renderAll();
+  autoSave();
+}
+
+  function renderQuickTasks() {
+  const container = document.getElementById("quickTasks");
+  container.innerHTML = "";
+
+  state.tasks
+    .filter(t => t.type === "quick")
+    .forEach(task => {
+      const taskEl = createTaskElement(task);
+      container.appendChild(taskEl);
+    });
+}
+  
   // ---------- PIE ----------
   function drawPie(canvas, day) {
     const ctx = canvas.getContext("2d");
@@ -686,8 +720,6 @@ div.appendChild(deleteBtn);
     renderAll();
   }
 
-  document.getElementById("addQuickBtn").onclick = addQuickTask;
-
   function renderAll() {
     renderTags();
     renderWeek();
@@ -704,6 +736,7 @@ div.appendChild(deleteBtn);
 })();
 
 window.onload = () => App.init();
+
 
 
 
